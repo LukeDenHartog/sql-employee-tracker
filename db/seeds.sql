@@ -1,35 +1,36 @@
-DROP TABLE IF EXISTS departments;
+   /*---------------- Department Table Code Below ----------------*/
 
-CREATE TABLE departments (
-    id INT NOT NULL PRIMARY KEY,
-    department VARCHAR(30) NOT NULL
-);
-
-INSERT INTO departments (id, department)
+INSERT INTO departments (name)
 VALUES 
-    (1, 'Engineering'),
-    (2, 'Finance'),
-    (3, 'Legal'),
-    (4, 'Sales');
+    ('Engineering'),
+    ('Finance'),
+    ('Legal'),
+    ('Sales');
 
-/*--------------------------------*/
+    /*---------------- Role Table Code Below ----------------*/
 
-DROP TABLE IF EXISTS roles;
-
-CREATE TABLE roles (
-    id INT NOT NULL PRIMARY KEY,
-    title VARCHAR(30) NOT NULL,
-    department VARCHAR(30) NOT NULL,
-    salary INT NOT NULL
-);
-
-INSERT INTO roles (id, title, department, salary)
+INSERT INTO role (title, department_id, salary)
 VALUES
-    (1, 'Sales Lead', 'Sales', 100000),
-    (2, 'Salesperson', 'Sales', 80000),
-    (3, 'Lead Engineer', 'Engineering', 150000),
-    (4, 'Software Engineer', 'Engineering', 120000),
-    (5, 'Account Manager', 'Finance', 160000),
-    (6, 'Accountant', 'Finance', 125000),
-    (7, 'Legal Team Lead', 'Legal', 250000),
-    (8, 'Lawyer', 'Legal', 190000);
+    ('Sales Lead', 4, 100000),
+    ('Salesperson', 4, 80000),
+    ('Lead Engineer', 1, 150000),
+    ('Software Engineer', 1, 120000),
+    ('Account Manager', 2, 160000),
+    ('Accountant', 2, 125000),
+    ('Legal Team Lead', 3, 250000),
+    ('Lawyer', 3, 190000);
+
+    /*---------------- Employee Table Code Below ----------------*/    
+
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES
+    ('John', 'Doe', 1, NULL ),
+    ('Mike', 'Chan', 2, 1 ),
+    ('Ashley', 'Rodriguez', 3, NULL ),
+    ('Kevin', 'Tupik', 4, 3),
+    ('Kunal', 'Singh', 5, NULL ),
+    ('Malia', 'Brown', 6, 5),
+    ('Sarah', 'Lourd', 7, NULL),
+    ('Tom', 'Allen', 8, 3);
+
