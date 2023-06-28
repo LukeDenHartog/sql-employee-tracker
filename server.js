@@ -124,6 +124,10 @@ function displayPrompt() {
         });
         // create a statement to update employee role.
       } else if (answers.index === 'View All Roles') {
+        db.query("SELECT role.id, role.title, departments.name, role.salary FROM role INNER JOIN departments ON  departments.id = role.department_id;", (err, response) => {
+            console.table(response);
+            displayPrompt(); // Starts the terminal prompt.
+        })
         // create a statement to view all roles.
       } else if (answers.index === 'Add Role') {
         db.query("SELECT * FROM departments", (error, response) => {
