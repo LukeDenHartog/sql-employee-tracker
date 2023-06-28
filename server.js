@@ -30,8 +30,10 @@ db.query("SELECT * FROM employee", (error, response) => {
 
 });
 
-displayPrompt();  // Starts the terminal prompt.
 
+
+
+displayPrompt();  // Starts the terminal prompt.
 function displayPrompt() {
     inquirer.prompt([
       {
@@ -71,7 +73,7 @@ function displayPrompt() {
             console.error(error);
             return;
           }
-  
+          console.log(results, "these results are from the add employee section")
           const newRolesArray = results.map(({ id, title }) => ({
             name: title,
             value: id,
@@ -124,14 +126,21 @@ function displayPrompt() {
         });
         // create a statement to update employee role.
       } else if (answers.index === 'View All Roles') {
+        db.query
         db.query("SELECT role.id, role.title, departments.name, role.salary FROM role INNER JOIN departments ON  departments.id = role.department_id;", (err, response) => {
             console.table(response);
             displayPrompt(); // Starts the terminal prompt.
         })
         // create a statement to view all roles.
       } else if (answers.index === 'Add Role') {
-        db.query("SELECT * FROM departments", (error, response) => {
-  
+        db.query("SELECT id, name FROM departments", (error, results) => {
+            console.log(results)
+                newDepartmentArray = results.map(({ id, name}) => ({
+                 name: name,
+                 value: id,
+               }));
+      
+        console.log(newDepartmentArray)
           inquirer.prompt([
             {
               type: 'input',
@@ -147,18 +156,20 @@ function displayPrompt() {
               type: 'list',
               name: 'departmentInput',
               message: 'Which department does the role belong to?',
-              choices: dynamicDepartmentList
+              choices: newDepartmentArray
             }
           ]).then((answer) => {
-            db.query(`INSERT INTO departments (name) VALUES ("${answers.depNameInput}")`, (err, res) => {
+            db.query(`INSERT INTO role (title, department_id, salary) VALUES ("${answer.roleNameInput}", ${answer.departmentInput}, ${answer.salaryInput});`,
+            function (err, result) {
               if (err) throw err;
-              console.log('Added new department successfully');
+              console.log('Added new role successfully');
               displayPrompt(); // Starts the terminal prompt.
-            })
+            }
+          );
+           })
           });
-        });
       }
-  
+      
       /*---------------- If user selected 'Update Employee Role' the code below will run. ----------------*/
       else if (answers.index === 'View All Departments') {
         db.query(`SELECT * FROM departments;`, (err, res) => {
@@ -190,4 +201,5 @@ function displayPrompt() {
       }
     });
   }
+
   
