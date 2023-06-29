@@ -63,6 +63,7 @@ function displayPrompt() {
   
           // Display the table
           const output = table(data);
+          console.log(output);
           displayPrompt();
         });
       }
