@@ -24,11 +24,13 @@ To install this project, first git clone the program from my GitHub repository, 
 
 ## Usage
 
-n/a
+Here is a link to a walkthrough video demonstrating how to use this program: [Link to Walkthrough Video](https://vimeo.com/840687642?share=copy)
+
+To use this project first you must open the project folder and navigate to it in the terminal. Once you are inside the program folder navigate to the "db" file via the terminal and enter "mysql -u root -p". Next you'll want to set up the database by typing "SOURCE shcema.sql" and "SOURCE seeds.sql. After doing so exit out of the "db" folder by typing "cd ..". Now the user will have to type in the command "node server.js", while in the main "sql-employee-tracker" folder to run the program. After you have entered the text "node server.js" inside the terminal a series of questions will be asked. When the user answers the questions the database will update accordingly!
 
 ## Contribution Guidelines
 
-n/a
+Luke A DenHartog
 
 ## Test Instructions
 

@@ -98,6 +98,7 @@ function displayPrompt() {
           ]).then((answers) => {
             db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
                 VALUE ("${answers.newFirstName}", "${answers.newLastName}", ${answers.roleNameInput}, null )`)
+                displayPrompt();
           })
         })
       }
@@ -131,6 +132,7 @@ function displayPrompt() {
               }
             ]).then((answer) => {
               db.query(`UPDATE employee SET role_id = ${answer.roleNameInput} WHERE id = ${answer.employeeChoice};`)
+              displayPrompt();
             });
           })
         })  // create a statement to update employee role.
@@ -203,7 +205,7 @@ function displayPrompt() {
         });
       } else if (answers.index === 'Quit') {
         console.log('Please run "node server.js" inside the terminal in order to start over');
-        // create a statement to quit the command line questions.
+
       }
     });
   }
