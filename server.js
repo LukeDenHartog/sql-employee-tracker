@@ -63,7 +63,6 @@ function displayPrompt() {
   
           // Display the table
           const output = table(data);
-          console.log(output);
           displayPrompt();
         });
       }
@@ -73,7 +72,6 @@ function displayPrompt() {
             console.error(error);
             return;
           }
-          console.log(results, "these results are from the add employee section")
           const newRolesArray = results.map(({ id, title }) => ({
             name: title,
             value: id,
@@ -98,49 +96,56 @@ function displayPrompt() {
   
           ]).then((answers) => {
             db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-              VALUE ("${answers.newFirstName}", "${answers.newLastName}", ${answers.roleNameInput}, null )`)
+                VALUE ("${answers.newFirstName}", "${answers.newLastName}", ${answers.roleNameInput}, null )`)
           })
         })
       }
   
       /*---------------- If user selected 'Update Employee Role' the code below will run.----------------*/
       if (answers.index === 'Update Employee Role') {
+        db.query("SELECT id, name FROM departments", (error, results) => {
   
-        inquirer.prompt([
-          {
-            type: 'list',
-            name: 'employeeChoice',
-            message: "Which employee's role would you like to update?",
-            choices: employeeNames
-          },
-          {
-            type: 'list',
-            name: 'roleNameInput',
-            message: 'Which role would you like to assign to this employee?',
-            choices: dynamicRoleList
-          }
-        ]).then((answer) => {
-  
-          // create a statement to add a department.
+          newDepartmentArray01 = results.map(({ id, name }) => ({
+            name: name,
+            value: id,
+          }));
+          db.query("SELECT id, first_name, last_name FROM employee", (error, results) => {
+            newEmployeeArray01 = results.map(({ id, first_name, last_name }) => ({
+              name: `${first_name} ${last_name}`,
+              value: id
+            }));
+            inquirer.prompt([
+              {
+                type: 'list',
+                name: 'employeeChoice',
+                message: "Which employee's role would you like to update?",
+                choices: newEmployeeArray01
+
+              },
+              {
+                type: 'list',
+                name: 'roleNameInput',
+                message: 'Which role would you like to assign to this employee?',
+                choices: newDepartmentArray01
+              }
+            ]).then((answer) => {
+              db.query(`UPDATE employee SET role_id = ${answer.roleNameInput} WHERE id = ${answer.employeeChoice};`)
+            });
+          })
+        })  // create a statement to update employee role.
+      } else if (answers.index === 'View All Roles') {
+        db.query("SELECT role.id, role.title, departments.name, role.salary FROM role INNER JOIN departments ON  departments.id = role.department_id;", (err, response) => {
+          console.table(response);
+          displayPrompt(); // Starts the terminal prompt.
   
         });
-        // create a statement to update employee role.
-      } else if (answers.index === 'View All Roles') {
-        db.query
-        db.query("SELECT role.id, role.title, departments.name, role.salary FROM role INNER JOIN departments ON  departments.id = role.department_id;", (err, response) => {
-            console.table(response);
-            displayPrompt(); // Starts the terminal prompt.
-        })
         // create a statement to view all roles.
       } else if (answers.index === 'Add Role') {
         db.query("SELECT id, name FROM departments", (error, results) => {
-            console.log(results)
-                newDepartmentArray = results.map(({ id, name}) => ({
-                 name: name,
-                 value: id,
-               }));
-      
-        console.log(newDepartmentArray)
+          newDepartmentArray02 = results.map(({ id, name }) => ({
+            name: name,
+            value: id,
+          }));
           inquirer.prompt([
             {
               type: 'input',
@@ -156,30 +161,31 @@ function displayPrompt() {
               type: 'list',
               name: 'departmentInput',
               message: 'Which department does the role belong to?',
-              choices: newDepartmentArray
+              choices: newDepartmentArray02
             }
           ]).then((answer) => {
             db.query(`INSERT INTO role (title, department_id, salary) VALUES ("${answer.roleNameInput}", ${answer.departmentInput}, ${answer.salaryInput});`,
-            function (err, result) {
-              if (err) throw err;
-              console.log('Added new role successfully');
-              displayPrompt(); // Starts the terminal prompt.
-            }
-          );
-           })
-          });
+              function (err, result) {
+                if (err) throw err;
+                console.log('Added new role successfully');
+                displayPrompt(); // Starts the terminal prompt.
+              }
+            );
+          })
+        });
       }
-      
+  
       /*---------------- If user selected 'Update Employee Role' the code below will run. ----------------*/
       else if (answers.index === 'View All Departments') {
         db.query(`SELECT * FROM departments;`, (err, res) => {
           console.table(res);
           displayPrompt(); // Starts the terminal prompt.
         });
+      }
   
   
-        /*---------------- If user selected 'Add Department' the code below will run. ----------------*/
-      } else if (answers.index === 'Add Department') {
+      /*---------------- If user selected 'Add Department' the code below will run. ----------------*/
+      else if (answers.index === 'Add Department') {
   
         inquirer.prompt([
           {
@@ -194,12 +200,9 @@ function displayPrompt() {
             displayPrompt(); // Starts the terminal prompt.
           })
         });
-  
       } else if (answers.index === 'Quit') {
         console.log('Please run "node server.js" inside the terminal in order to start over');
         // create a statement to quit the command line questions.
       }
     });
   }
-
-  
